@@ -192,3 +192,8 @@ function updateCanvasColor() {
 function updateSelectedTool() {
 	tool = document.getElementById("tool-select").value;
 }
+
+function saveDrawing() {
+	const image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+	window.location.href = image;
+}
