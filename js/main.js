@@ -82,12 +82,26 @@ function handleMouseMove(x, y) {
 
 			// save what is currently drawn
 			let drawing = drawingStates[drawingStates.length - 1];
-			
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			
 			// restore what was drawn prior to starting to draw a line, then draw the line on top of it
 			ctx.putImageData(drawing, 0, 0);
 			drawLine(prevMouseX, prevMouseY, mouseX, mouseY);
+		}
+		else if(tool === "rect") {
+			mouseX = x;
+			mouseY = y;
+
+			// save what is currently drawn
+			let drawing = drawingStates[drawingStates.length - 1];
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+			ctx.putImageData(drawing, 0, 0);
+			ctx.beginPath();
+			ctx.rect(prevMouseX, prevMouseY, mouseX - prevMouseX, mouseY - prevMouseY);
+			ctx.strokeStyle = document.getElementById("pencolor-input").value;
+			ctx.lineWidth = document.getElementById("pen-width").value;
+			ctx.stroke();
 		}
 	}
 	else {
