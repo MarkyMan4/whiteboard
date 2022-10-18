@@ -95,13 +95,20 @@ function handleMouseMove(x, y) {
 			// save what is currently drawn
 			let drawing = drawingStates[drawingStates.length - 1];
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
-
 			ctx.putImageData(drawing, 0, 0);
-			ctx.beginPath();
-			ctx.rect(prevMouseX, prevMouseY, mouseX - prevMouseX, mouseY - prevMouseY);
-			ctx.strokeStyle = document.getElementById("pencolor-input").value;
-			ctx.lineWidth = document.getElementById("pen-width").value;
-			ctx.stroke();
+
+			drawRect(prevMouseX, prevMouseY, mouseX, mouseY);
+		}
+		else if(tool === "circle") {
+			mouseX = x;
+			mouseY = y;
+
+			// save what is currently drawn
+			let drawing = drawingStates[drawingStates.length - 1];
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.putImageData(drawing, 0, 0);
+
+			drawCircle(prevMouseX, prevMouseY, mouseX, mouseY);
 		}
 	}
 	else {
@@ -124,6 +131,26 @@ function drawLine(fromX, fromY, toX, toY) {
 	ctx.moveTo(fromX, fromY);
 	ctx.lineTo(toX, toY);
 	ctx.lineCap = "round";
+	ctx.strokeStyle = document.getElementById("pencolor-input").value;
+	ctx.lineWidth = document.getElementById("pen-width").value;
+	ctx.stroke();
+}
+
+function drawRect(fromX, fromY, toX, toY) {
+	ctx.beginPath();
+	ctx.rect(fromX, fromY, toX - fromX, toY - fromY);
+	ctx.strokeStyle = document.getElementById("pencolor-input").value;
+	ctx.lineWidth = document.getElementById("pen-width").value;
+	ctx.stroke();
+}
+
+function drawCircle(fromX, fromY, toX, toY) {
+	let y = Math.abs(toY - fromY);
+	let x = Math.abs(toX - fromX);
+	let radius = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+
+	ctx.beginPath();
+	ctx.arc(fromX, fromY, radius, 0, 2 * Math.PI);
 	ctx.strokeStyle = document.getElementById("pencolor-input").value;
 	ctx.lineWidth = document.getElementById("pen-width").value;
 	ctx.stroke();
