@@ -4,7 +4,11 @@ const ctx = canvas.getContext("2d", {willReadFrequently: true});
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
+let form = document.getElementById("command-form");
+form.addEventListener("submit", handleCommand);
+
 let mouseDown = false;
+let mode = "normal";
 
 // keep track of whether something is currently being drawn, used for knowing whether to add to state list on mouseup
 let isDrawing = false; 
@@ -108,7 +112,10 @@ function handleMouseMove(x, y) {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			ctx.putImageData(drawing, 0, 0);
 
-			drawCircle(prevMouseX, prevMouseY, mouseX, mouseY);
+			let run = Math.abs(mouseX - prevMouseX);
+			let rise = Math.abs(mouseY - prevMouseY); 
+			let radius = Math.sqrt(Math.pow(run, 2) + Math.pow(rise, 2));
+			drawCircle(prevMouseX, prevMouseY, radius);
 		}
 	}
 	else {
@@ -144,13 +151,9 @@ function drawRect(fromX, fromY, toX, toY) {
 	ctx.stroke();
 }
 
-function drawCircle(fromX, fromY, toX, toY) {
-	let y = Math.abs(toY - fromY);
-	let x = Math.abs(toX - fromX);
-	let radius = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-
+function drawCircle(x, y, radius) {
 	ctx.beginPath();
-	ctx.arc(fromX, fromY, radius, 0, 2 * Math.PI);
+	ctx.arc(x, y, radius, 0, 2 * Math.PI);
 	ctx.strokeStyle = document.getElementById("pencolor-input").value;
 	ctx.lineWidth = document.getElementById("pen-width").value;
 	ctx.stroke();
@@ -193,7 +196,85 @@ function updateSelectedTool() {
 	tool = document.getElementById("tool-select").value;
 }
 
+function updateMode() {
+	mode = document.getElementById("mode-select").value;
+
+	if(mode === "normal") {
+		document.getElementById("normal-controls").style.display = "inline-block";
+		document.getElementById("command-controls").style.display = "none";
+	}
+	else if(mode === "command") {
+		document.getElementById("normal-controls").style.display = "none";
+		document.getElementById("command-controls").style.display = "inline-block";
+	}
+}
+
 function saveDrawing() {
 	const image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
 	window.location.href = image;
+}
+
+function handleCommand(e) {
+	e.preventDefault();
+
+	let command = document.getElementById("command-input").value;
+	document.getElementById("command-input").value = "";
+	let tokens = preprocessCommand(command);
+
+	parseCommand(tokens);
+}
+
+// split string into tokens
+function preprocessCommand(command) {
+	let parts = command.split(" ");
+	let tokens = [];
+
+	parts.forEach(p => {
+		if(p != "") {
+			tokens.push(p);
+		}
+	});
+
+	return tokens;
+}
+
+// given a list of tokens, determine what to do
+function parseCommand(tokens) {
+	let commandSuccess = false;
+
+	switch(tokens[0]) {
+		case "line":
+			let lineFromX = tokens[1];
+			let lineFromY = tokens[2];
+			let lineToX = tokens[3];
+			let lineToY = tokens[4];
+			drawLine(lineFromX, lineFromY, lineToX, lineToY);
+			commandSuccess = true;
+			break;
+		case "rect":
+			let rectFromX = tokens[1];
+			let rectFromY = tokens[2];
+			let rectToX = tokens[3];
+			let rectToY = tokens[4];
+			drawRect(rectFromX, rectFromY, rectToX, rectToY);
+			commandSuccess = true;
+			break;
+		case "circle":
+			let x = tokens[1];
+			let y = tokens[2];
+			let radius = tokens[3];
+			drawCircle(x, y, radius);
+			commandSuccess = true;
+			break;
+		case "undo":
+			undo();
+			break;
+		case "clear":
+			clearScreen();
+			break;
+	}
+
+	if(commandSuccess) {
+		drawingStates.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+	}
 }

@@ -11,23 +11,38 @@
 <body>
   <canvas id="canvas"></canvas>
 	<div id="menu">
-		<label>canvas color</label>
-		<input id="canvascolor-input" value="#212121" type="color" onchange="updateCanvasColor()"></input> | 
-		<label>tool</label>
-		<select name="tools" id="tool-select" onchange="updateSelectedTool()">
-			<option value="pen">pen</option>
-			<option value="eraser">eraser</option>
-            <option value="line">line</option>
-			<option value="rect">rectangle</option>
-			<option value="circle">circle</option>
+		<label>mode</label>
+		<select name="mode" id="mode-select" onchange="updateMode()">
+			<option value="normal">normal</option>
+			<option value="command">command</option>
 		</select> | 
-		<label>pen color</label>
-		<input id="pencolor-input" value="#ffffff" type="color"></input> | 
-		<label>pen width</label>
-		<input id="pen-width" type="text" pattern="\d*" value="5" maxlength="4" size="4"></input> | 
-        <button onclick="undo()">undo</button> | 
-		<button onclick="clearScreen()">clear</button> | 
-		<button onclick="saveDrawing()">save</button>
+
+		<div id="command-controls">
+			<form id="command-form" autocomplete="off">
+				<label>&gt;</label>
+				<input id="command-input" type="text"></input>
+				<button type="submit">enter</button>
+			</form>
+		</div>
+		<div id="normal-controls">
+			<label>canvas color</label>
+			<input id="canvascolor-input" value="#212121" type="color" onchange="updateCanvasColor()"></input> | 
+			<label>tool</label>
+			<select name="tools" id="tool-select" onchange="updateSelectedTool()">
+				<option value="pen">pen</option>
+				<option value="eraser">eraser</option>
+				<option value="line">line</option>
+				<option value="rect">rectangle</option>
+				<option value="circle">circle</option>
+			</select> | 
+			<label>pen color</label>
+			<input id="pencolor-input" value="#ffffff" type="color"></input> | 
+			<label>pen width</label>
+			<input id="pen-width" type="text" pattern="\d*" value="5" maxlength="4" size="4"></input> | 
+			<button onclick="undo()">undo</button> | 
+			<button onclick="clearScreen()">clear</button> | 
+			<button onclick="saveDrawing()">save</button>
+		</div>
 	</div>
 	
   <script src="js/main.js"></script> 

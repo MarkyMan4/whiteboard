@@ -17,6 +17,10 @@
 	display: inline-block;
 }
 
-/* #menu > * {
-	margin-bottom: 10px;
-} */
+#normal-controls {
+	display: inline-block;
+}
+
+#command-controls {
+	display: none;
+}
