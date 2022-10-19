@@ -226,7 +226,7 @@ function handleCommand(e) {
 
 // split string into tokens
 function preprocessCommand(command) {
-	let parts = command.split(" ");
+	let parts = command.toLowerCase().split(" ");
 	let tokens = [];
 
 	parts.forEach(p => {
