@@ -15,15 +15,9 @@
 		<select name="mode" id="mode-select" onchange="updateMode()">
 			<option value="normal">normal</option>
 			<option value="command">command</option>
+			<option value="script">script</option>
 		</select> | 
 
-		<div id="command-controls">
-			<form id="command-form" autocomplete="off">
-				<label>&gt;</label>
-				<input id="command-input" type="text"></input>
-				<button type="submit">enter</button>
-			</form>
-		</div>
 		<div id="normal-controls">
 			<label>canvas color</label>
 			<input id="canvascolor-input" value="#212121" type="color" onchange="updateCanvasColor()"></input> | 
@@ -42,6 +36,19 @@
 			<button onclick="undo()">undo</button> | 
 			<button onclick="clearScreen()">clear</button> | 
 			<button onclick="saveDrawing()">save</button>
+		</div>
+
+		<div id="command-controls">
+			<form id="command-form" autocomplete="off">
+				<label>&gt;</label>
+				<input id="command-input" type="text"></input>
+				<button type="submit">enter</button>
+			</form>
+		</div>
+
+		<div id="script-controls">
+			<textarea id="script-input" rows="10" cols="25"></textarea>
+			<button onclick="runScript()">run</button>
 		</div>
 	</div>
 	

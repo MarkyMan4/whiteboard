@@ -202,16 +202,34 @@ function updateMode() {
 	if(mode === "normal") {
 		document.getElementById("normal-controls").style.display = "inline-block";
 		document.getElementById("command-controls").style.display = "none";
+		document.getElementById("script-controls").style.display = "none";
 	}
 	else if(mode === "command") {
 		document.getElementById("normal-controls").style.display = "none";
 		document.getElementById("command-controls").style.display = "inline-block";
+		document.getElementById("script-controls").style.display = "none";
+	}
+	else if(mode === "script") {
+		document.getElementById("normal-controls").style.display = "none";
+		document.getElementById("command-controls").style.display = "none";
+		document.getElementById("script-controls").style.display = "inline-block";
 	}
 }
 
 function saveDrawing() {
 	const image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
 	window.location.href = image;
+}
+
+function runScript() {
+	let commands = document.getElementById("script-input").value.split("\n");
+	
+	commands.forEach(cmd => {
+		if(cmd.trim() != "") {
+			let tokens = preprocessCommand(cmd);
+			parseCommand(tokens);
+		}
+	});
 }
 
 function handleCommand(e) {
@@ -265,6 +283,14 @@ function parseCommand(tokens) {
 			let radius = tokens[3];
 			drawCircle(x, y, radius);
 			commandSuccess = true;
+			break;
+		case "linewidth":
+			if(parseInt(tokens[1])) {
+				document.getElementById("pen-width").value = tokens[1];
+			}
+			break;
+		case "color":
+			document.getElementById("pencolor-input").value = tokens[1];
 			break;
 		case "undo":
 			undo();
