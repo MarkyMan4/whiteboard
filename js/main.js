@@ -1,3 +1,36 @@
+/*
+
+example 1
+
+clear
+linewidth 1
+circle 800 250 10:200:10
+circle 1000 250 10:200:10
+circle 800 450 10:200:10
+circle 1000 450 10:200:10
+circle 900 350 10:140:10
+
+------------------------------------------
+
+example 2
+
+clear
+linewidth 1
+color #ff9900
+circle 800:1000:50 300:500:50 10:150:20
+
+------------------------------------------
+
+example 3
+
+clear
+linewidth 1
+square 800 400 -200:200:10
+square 1000 200 -200:200:10
+
+*/
+
+
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d", {willReadFrequently: true});
 
@@ -101,7 +134,7 @@ function handleMouseMove(x, y) {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			ctx.putImageData(drawing, 0, 0);
 
-			drawRect(prevMouseX, prevMouseY, mouseX, mouseY);
+			drawRect(prevMouseX, prevMouseY, mouseX - prevMouseX, mouseY - prevMouseY);
 		}
 		else if(tool === "circle") {
 			mouseX = x;
@@ -143,9 +176,9 @@ function drawLine(fromX, fromY, toX, toY) {
 	ctx.stroke();
 }
 
-function drawRect(fromX, fromY, toX, toY) {
+function drawRect(fromX, fromY, width, height) {
 	ctx.beginPath();
-	ctx.rect(fromX, fromY, toX - fromX, toY - fromY);
+	ctx.rect(fromX, fromY, width, height);
 	ctx.strokeStyle = document.getElementById("pencolor-input").value;
 	ctx.lineWidth = document.getElementById("pen-width").value;
 	ctx.stroke();
@@ -262,26 +295,19 @@ function parseCommand(tokens) {
 
 	switch(tokens[0]) {
 		case "line":
-			let lineFromX = tokens[1];
-			let lineFromY = tokens[2];
-			let lineToX = tokens[3];
-			let lineToY = tokens[4];
-			drawLine(lineFromX, lineFromY, lineToX, lineToY);
+			evalLine(tokens);
 			commandSuccess = true;
 			break;
 		case "rect":
-			let rectFromX = tokens[1];
-			let rectFromY = tokens[2];
-			let rectToX = tokens[3];
-			let rectToY = tokens[4];
-			drawRect(rectFromX, rectFromY, rectToX, rectToY);
+			evalRect(tokens);
+			commandSuccess = true;
+			break;
+		case "square":
+			evalSquare(tokens);
 			commandSuccess = true;
 			break;
 		case "circle":
-			let x = tokens[1];
-			let y = tokens[2];
-			let radius = tokens[3];
-			drawCircle(x, y, radius);
+			evalCircle(tokens);
 			commandSuccess = true;
 			break;
 		case "linewidth":
@@ -303,4 +329,181 @@ function parseCommand(tokens) {
 	if(commandSuccess) {
 		drawingStates.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
 	}
+}
+
+function evalLine(tokens) {
+	let fromX = tokens[1];
+	let fromY = tokens[2];
+	let toX = tokens[3];
+	let toY = tokens[4];
+
+	let fromXVals = [fromX];
+	let fromYVals = [fromY];
+	let toXVals = [toX];
+	let toYVals = [toY];
+
+	if(fromX.includes(":")) {
+		fromXVals = evalRange(fromX);
+	}
+
+	if(fromY.includes(":")) {
+		fromYVals = evalRange(fromY);
+	}
+
+	if(toX.includes(":")) {
+		toXVals = evalRange(toX);
+	}
+
+	if(toY.includes(":")) {
+		toYVals = evalRange(toY);
+	}
+
+	for(let i = 0; i < fromXVals.length; i++) {
+		for(let j = 0; j < fromYVals.length; j++) {
+			for(let k = 0; k < toXVals.length; k++) {
+				for(let l = 0; l < toYVals.length; l++) {
+					drawLine(fromXVals[i], fromYVals[j], toXVals[k], toYVals[l]);
+				}
+			}
+		}
+	}
+}
+
+function evalRect(tokens) {
+	let fromX = tokens[1];
+	let fromY = tokens[2];
+	let width = tokens[3];
+	let height = tokens[4];
+
+	let fromXVals = [fromX];
+	let fromYVals = [fromY];
+	let widthVals = [width];
+	let heightVals = [height];
+
+	if(fromX.includes(":")) {
+		fromXVals = evalRange(fromX);
+	}
+
+	if(fromY.includes(":")) {
+		fromYVals = evalRange(fromY);
+	}
+
+	if(width.includes(":")) {
+		widthVals = evalRange(width);
+	}
+
+	if(height.includes(":")) {
+		heightVals = evalRange(height);
+	}
+
+	for(let i = 0; i < fromXVals.length; i++) {
+		for(let j = 0; j < fromYVals.length; j++) {
+			for(let k = 0; k < widthVals.length; k++) {
+				for(let l = 0; l < heightVals.length; l++) {
+					drawRect(fromXVals[i], fromYVals[j], widthVals[k], heightVals[l]);
+				}
+			}
+		}
+	}
+}
+
+function evalSquare(tokens) {
+	let fromX = tokens[1];
+	let fromY = tokens[2];
+	let size = tokens[3];
+
+	let fromXVals = [fromX];
+	let fromYVals = [fromY];
+	let sizeVals = [size];
+
+	if(fromX.includes(":")) {
+		fromXVals = evalRange(fromX);
+	}
+
+	if(fromY.includes(":")) {
+		fromYVals = evalRange(fromY);
+	}
+
+	if(size.includes(":")) {
+		sizeVals = evalRange(size);
+	}
+
+	for(let i = 0; i < fromXVals.length; i++) {
+		for(let j = 0; j < fromYVals.length; j++) {
+			for(let k = 0; k < sizeVals.length; k++) {
+				drawRect(fromXVals[i], fromYVals[j], sizeVals[k], sizeVals[k]);
+			}
+		}
+	}
+}
+
+function evalCircle(tokens) {
+	let x = tokens[1];
+	let y = tokens[2];
+	let radius = tokens[3];
+
+	let xVals = [x];
+	let yVals = [y];
+	let radiusVals = [radius];
+
+	if(x.includes(":")) {
+		xVals = evalRange(x);
+	}
+
+	if(y.includes(":")) {
+		yVals = evalRange(y);
+	}
+
+	if(radius.includes(":")) {
+		radiusVals = evalRange(radius);
+	}
+
+	for(let i = 0; i < xVals.length; i++) {
+		for(let j = 0; j < yVals.length; j++) {
+			for(let k = 0; k < radiusVals.length; k++) {
+				drawCircle(xVals[i], yVals[j], radiusVals[k]);
+			}
+		}
+	}
+}
+
+/*
+	range expression is <start>:<end>:<increment>
+	e.g. circle 10 10 10:100:10 draws 10 circles at (10, 10) with radius 10, 20, ..., 100
+	
+	returns list for range. e.g. 0:3 -> [0,1,2,3], 0:10:2 -> [0,2,4,6,8,10]
+*/
+function evalRange(rangeExpression) {
+	let parts = rangeExpression.split(":");
+	let start = 0;
+	let end = 0;
+	let increment = 1; // default increment is one
+	
+	if(parts.length == 1) {
+		return parts[0];
+	}
+	
+	if(parts.length >= 2) {
+		start = parseInt(parts[0]);
+		end = parseInt(parts[1]);
+	}
+
+	if(parts.length == 3) {
+		increment = parseInt(parts[2]);
+	}
+
+	let vals = [];
+
+	if(increment >= 0) {
+		for(let i = start; i <= end; i += increment) {
+			vals.push(i);
+		}
+	}
+	else {
+		for(let i = start; i >= end; i += increment) {
+			vals.push(i);
+		}
+	}
+
+	return vals;
 }
