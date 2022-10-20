@@ -28,6 +28,14 @@ linewidth 1
 square 800 400 -200:200:10
 square 1000 200 -200:200:10
 
+------------------------------------------
+
+example 4
+
+clear
+linewidth 1
+csquare 700:900:50 300:500:50 250:50:-25
+
 */
 
 
@@ -295,19 +303,23 @@ function parseCommand(tokens) {
 
 	switch(tokens[0]) {
 		case "line":
-			evalLine(tokens);
+			evalLine(tokens[1], tokens[2], tokens[3], tokens[4]);
 			commandSuccess = true;
 			break;
 		case "rect":
-			evalRect(tokens);
+			evalRect(tokens[1], tokens[2], tokens[3], tokens[4]);
 			commandSuccess = true;
 			break;
 		case "square":
-			evalSquare(tokens);
+			evalSquare(tokens[1], tokens[2], tokens[3]);
+			commandSuccess = true;
+			break;
+		case "csquare":
+			evalSquare(tokens[1], tokens[2], tokens[3], true);
 			commandSuccess = true;
 			break;
 		case "circle":
-			evalCircle(tokens);
+			evalCircle(tokens[1], tokens[2], tokens[3]);
 			commandSuccess = true;
 			break;
 		case "linewidth":
@@ -331,12 +343,7 @@ function parseCommand(tokens) {
 	}
 }
 
-function evalLine(tokens) {
-	let fromX = tokens[1];
-	let fromY = tokens[2];
-	let toX = tokens[3];
-	let toY = tokens[4];
-
+function evalLine(fromX, fromY, toX, toY) {
 	let fromXVals = [fromX];
 	let fromYVals = [fromY];
 	let toXVals = [toX];
@@ -369,12 +376,7 @@ function evalLine(tokens) {
 	}
 }
 
-function evalRect(tokens) {
-	let fromX = tokens[1];
-	let fromY = tokens[2];
-	let width = tokens[3];
-	let height = tokens[4];
-
+function evalRect(fromX, fromY, width, height) {
 	let fromXVals = [fromX];
 	let fromYVals = [fromY];
 	let widthVals = [width];
@@ -407,41 +409,42 @@ function evalRect(tokens) {
 	}
 }
 
-function evalSquare(tokens) {
-	let fromX = tokens[1];
-	let fromY = tokens[2];
-	let size = tokens[3];
-
-	let fromXVals = [fromX];
-	let fromYVals = [fromY];
+function evalSquare(x, y, size, centered=false) {
+	let xVals = [x];
+	let yVals = [y];
 	let sizeVals = [size];
 
-	if(fromX.includes(":")) {
-		fromXVals = evalRange(fromX);
+	if(x.includes(":")) {
+		xVals = evalRange(x);
 	}
 
-	if(fromY.includes(":")) {
-		fromYVals = evalRange(fromY);
+	if(y.includes(":")) {
+		yVals = evalRange(y);
 	}
 
 	if(size.includes(":")) {
 		sizeVals = evalRange(size);
 	}
 
-	for(let i = 0; i < fromXVals.length; i++) {
-		for(let j = 0; j < fromYVals.length; j++) {
+	for(let i = 0; i < xVals.length; i++) {
+		for(let j = 0; j < yVals.length; j++) {
 			for(let k = 0; k < sizeVals.length; k++) {
-				drawRect(fromXVals[i], fromYVals[j], sizeVals[k], sizeVals[k]);
+				if(centered) {
+					let halfSize = parseInt(sizeVals[k]) / 2;
+					let startX = parseInt(xVals[i]) - halfSize;
+					let startY = parseInt(yVals[j]) - halfSize;
+
+					drawRect(startX, startY, sizeVals[k], sizeVals[k]);
+				}
+				else {
+					drawRect(xVals[i], yVals[j], sizeVals[k], sizeVals[k]);
+				}
 			}
 		}
 	}
 }
 
-function evalCircle(tokens) {
-	let x = tokens[1];
-	let y = tokens[2];
-	let radius = tokens[3];
-
+function evalCircle(x, y, radius) {
 	let xVals = [x];
 	let yVals = [y];
 	let radiusVals = [radius];
