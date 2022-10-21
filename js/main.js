@@ -133,6 +133,18 @@ function handleMouseMove(x, y) {
 			ctx.putImageData(drawing, 0, 0);
 			drawLine(prevMouseX, prevMouseY, mouseX, mouseY);
 		}
+		else if(tool === "arrow") {
+			mouseX = x;
+			mouseY = y;
+
+			// save what is currently drawn
+			let drawing = drawingStates[drawingStates.length - 1];
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			
+			// restore what was drawn prior to starting to draw a line, then draw the line on top of it
+			ctx.putImageData(drawing, 0, 0);
+			drawArrow(prevMouseX, prevMouseY, mouseX, mouseY);
+		}
 		else if(tool === "rect") {
 			mouseX = x;
 			mouseY = y;
@@ -182,6 +194,31 @@ function drawLine(fromX, fromY, toX, toY) {
 	ctx.strokeStyle = document.getElementById("pencolor-input").value;
 	ctx.lineWidth = document.getElementById("pen-width").value;
 	ctx.stroke();
+}
+
+function drawArrow(fromX, fromY, toX, toY) {
+	// draw the main line
+	drawLine(fromX, fromY, toX, toY);
+	let rise = toY - fromY;
+	let run = toX - fromX;
+
+	let length = Math.sqrt(Math.pow(rise, 2) + Math.pow(run, 2));
+
+	// normalize and scale to 10
+	rise = (rise / length) * 15;
+	run = (run / length) * 15;
+
+	// translate to mouse position so it is the origin
+	// rotate and draw supporting lines
+	ctx.translate(toX, toY);
+	ctx.rotate(150 * Math.PI / 180);
+	drawLine(0, 0, run, rise);
+
+	ctx.rotate(-300 * Math.PI / 180);
+	drawLine(0, 0, run, rise);
+	ctx.translate(-toX, -toY);
+
+	ctx.setTransform(1,0,0,1,0,0);
 }
 
 function drawRect(fromX, fromY, width, height) {
