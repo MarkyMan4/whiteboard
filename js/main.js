@@ -290,7 +290,7 @@ function updateMode() {
 	else if(mode === "script") {
 		document.getElementById("normal-controls").style.display = "none";
 		document.getElementById("command-controls").style.display = "none";
-		document.getElementById("script-controls").style.display = "inline-block";
+		document.getElementById("script-controls").style.display = "block";
 	}
 }
 

@@ -28,3 +28,14 @@
 #script-controls {
 	display: none;
 }
+
+#command-input {
+	background-color: #383838;
+	color: rgb(4, 245, 56);
+}
+
+#script-input {
+	vertical-align: top;
+	background-color: #383838;
+	color: rgb(4, 245, 56);
+}

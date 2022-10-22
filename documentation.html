@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/docstyle.css">
+    <title>Documentation</title>
+</head>
+<body>
+    <h1>The docs</h1>
+    <hr />
+    <h2>Commands</h2>
+    <code>clear</code>
+    <p>clears the screen</p>
+    <br />
+    <code>undo</code>
+    <p>undo the last thing drawn</p>
+    <br />
+    <code>color &lt;hex color&gt;</code>
+    <p>specify the color to draw with - color should be given as hexadecimal</p>
+    <br />
+    <code>linewidth &lt;size&gt;</code>
+    <p>specify the width of the pen</p>
+    <br />
+    <code>line &lt;fromX&gt; &lt;fromY&gt; &lt;toX&gt; &lt;toY&gt;</code>
+    <p>draw a line from (fromX, fromY) to (toX, toY)</p>
+    <br />
+    <code>rect &lt;x&gt; &lt;y&gt; &lt;width&gt; &lt;height&gt;</code>
+    <p>draw a rectangle starting at (x, y) with the specified width and height</p>
+    <br />
+    <code>square &lt;x&gt; &lt;y&gt; &lt;size&gt;</code>
+    <p>draw a square starting at (x, y) with the width and height of the size specified</p>
+    <br />
+    <code>csquare &lt;x&gt; &lt;y&gt; &lt;size&gt;</code>
+    <p>same as <code>square</code>, but x and y specify the centerpoint of the square</p>
+    <br />
+    <code>circle &lt;x&gt; &lt;y&gt; &lt;radius&gt;</code>
+    <p>draw a circle at (x, y) with the specified radius</p>
+
+    <h2>Ranges</h2>
+    <p>
+        When drawing lines and shapes, instead of passing a number for positions and sizes, you can specify ranges. 
+        This allows you to draw multiple shapes with a single command. Ranges have the following syntax:
+    </p>
+    <code>&lt;start&gt;:&lt;stop&gt;:&lt;increment&gt;</code>
+    <p>
+        See the Examples section for sample code.
+    </p>
+
+    <h2>Examples</h2>
+    <p>Draws 5 circles with the following x positions: 100, 200, 300. Each circle has y position 100 and radius 50.</p>
+    <code>circle 100:300:100 100 50</code>
+    <br />
+    
+    <p>Run the below examples in script mode to see what they do.</p>
+    <p>example 1</p>
+    <code>
+        clear &nbsp;<br />
+        linewidth 1 &nbsp;<br />
+        circle 800 250 10:200:10 &nbsp;<br />
+        circle 1000 250 10:200:10 &nbsp;<br />
+        circle 800 450 10:200:10 &nbsp;<br />
+        circle 1000 450 10:200:10 &nbsp;<br />
+        circle 900 350 10:140:10
+    </code>
+    <br />
+
+    <p>example 2</p>
+    <code>
+        clear &nbsp;<br />
+        linewidth 1 &nbsp;<br />
+        color #ff9900 &nbsp;<br />
+        circle 800:1000:50 300:500:50 10:150:20
+    </code>
+    <br />
+
+    <p>example 3</p>
+    <code>
+        clear &nbsp;<br />
+        linewidth 1 &nbsp;<br />
+        square 800 400 -200:200:10 &nbsp;<br />
+        square 1000 200 -200:200:10
+    </code>
+    <br />
+
+    <p>example 4</p>
+    <code>
+        clear &nbsp;<br />
+        linewidth 1 &nbsp;<br />
+        csquare 700:900:50 300:500:50 250:50:-25
+    </code>
+</body>
+</html>
