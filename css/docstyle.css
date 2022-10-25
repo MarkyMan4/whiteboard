@@ -8,3 +8,13 @@ code {
     padding: 4px;
     border-radius: 2px;
 }
+
+.code-snippet {
+    background-color: #383838;
+    color: rgb(4, 245, 56);
+    padding: 10px;
+    border-radius: 5px;
+    display: inline-block;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: small;
+}
