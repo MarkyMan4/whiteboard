@@ -1,44 +1,3 @@
-/*
-
-example 1
-
-clear
-linewidth 1
-circle 800 250 10:200:10
-circle 1000 250 10:200:10
-circle 800 450 10:200:10
-circle 1000 450 10:200:10
-circle 900 350 10:140:10
-
-------------------------------------------
-
-example 2
-
-clear
-linewidth 1
-color #ff9900
-circle 800:1000:50 300:500:50 10:150:20
-
-------------------------------------------
-
-example 3
-
-clear
-linewidth 1
-square 800 400 -200:200:10
-square 1000 200 -200:200:10
-
-------------------------------------------
-
-example 4
-
-clear
-linewidth 1
-csquare 700:900:50 300:500:50 250:50:-25
-
-*/
-
-
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d", {willReadFrequently: true});
 
@@ -165,6 +124,8 @@ function handleMouseMove(x, y) {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			ctx.putImageData(drawing, 0, 0);
 
+			let fillShape = document.getElementById("fill-input").checked;
+
 			let run = Math.abs(mouseX - prevMouseX);
 			let rise = Math.abs(mouseY - prevMouseY); 
 			let radius = Math.sqrt(Math.pow(run, 2) + Math.pow(rise, 2));
@@ -221,20 +182,31 @@ function drawArrow(fromX, fromY, toX, toY) {
 	ctx.setTransform(1,0,0,1,0,0);
 }
 
+// either ctx.stroke() or ctx.fill() based on what is selected
+function strokeOrFillShape() {
+	const isFilled = document.getElementById("fill-input").checked;
+
+	if(isFilled) {
+		ctx.fillStyle = document.getElementById("pencolor-input").value;
+		ctx.fill();
+	}
+	else {
+		ctx.strokeStyle = document.getElementById("pencolor-input").value;
+		ctx.lineWidth = document.getElementById("pen-width").value;
+		ctx.stroke();
+	}
+}
+
 function drawRect(fromX, fromY, width, height) {
 	ctx.beginPath();
 	ctx.rect(fromX, fromY, width, height);
-	ctx.strokeStyle = document.getElementById("pencolor-input").value;
-	ctx.lineWidth = document.getElementById("pen-width").value;
-	ctx.stroke();
+	strokeOrFillShape();
 }
 
 function drawCircle(x, y, radius) {
 	ctx.beginPath();
 	ctx.arc(x, y, radius, 0, 2 * Math.PI);
-	ctx.strokeStyle = document.getElementById("pencolor-input").value;
-	ctx.lineWidth = document.getElementById("pen-width").value;
-	ctx.stroke();
+	strokeOrFillShape();
 }
 
 function clearCircle() {
@@ -366,6 +338,12 @@ function parseCommand(tokens) {
 			break;
 		case "color":
 			document.getElementById("pencolor-input").value = tokens[1];
+			break;
+		case "stroke":
+			document.getElementById("fill-input").checked = false;
+			break;
+		case "fill":
+			document.getElementById("fill-input").checked = true;
 			break;
 		case "undo":
 			undo();
