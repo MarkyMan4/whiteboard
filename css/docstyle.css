@@ -1,5 +1,7 @@
 body {
     margin-bottom: 10%;
+    background-image: linear-gradient(rgb(104, 0, 104), rgb(58, 58, 58), rgb(29, 29, 29));
+    color: white;
 }
 
 code {
@@ -7,6 +9,9 @@ code {
     color: rgb(4, 245, 56);
     padding: 4px;
     border-radius: 2px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(136, 136, 136);
 }
 
 .code-snippet {
@@ -17,4 +22,7 @@ code {
     display: inline-block;
     font-family: 'Courier New', Courier, monospace;
     font-size: small;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(136, 136, 136);
 }

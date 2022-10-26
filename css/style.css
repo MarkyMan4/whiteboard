@@ -32,10 +32,12 @@
 #command-input {
 	background-color: #383838;
 	color: rgb(4, 245, 56);
+	font-family: 'Courier New', Courier, monospace;
 }
 
 #script-input {
 	vertical-align: top;
 	background-color: #383838;
 	color: rgb(4, 245, 56);
+	font-family: 'Courier New', Courier, monospace;
 }
