@@ -11,13 +11,19 @@ let mouseDown = false;
 let mode = "normal";
 
 // keep track of whether something is currently being drawn, used for knowing whether to add to state list on mouseup
-let isDrawing = false; 
+let isDrawing = false;
 let prevMouseX = 0;
 let prevMouseY = 0;
 let mouseX = 0;
 let mouseY = 0;
 let tool = "pen";
 let drawingStates = [ctx.getImageData(0, 0, canvas.width, canvas.height)]; // stack representing states of canvas, can be used for undo operation
+
+// text variables
+let isTyping = false;
+let textTyped = ""; // keeps track of what characters were entered
+let textX = 0;
+let textY = 0;
 
 window.addEventListener("resize", (event) => {
 	canvas.width = window.innerWidth;
@@ -26,6 +32,13 @@ window.addEventListener("resize", (event) => {
 
 document.addEventListener("mousedown", (event) => {
 	mouseDown = true;
+
+	if(tool === "text") {
+		isTyping = true;
+		textTyped = "";
+		textX = event.x;
+		textY = event.y;
+	}
 });
 
 document.addEventListener("mouseup", (event) => {
@@ -39,6 +52,19 @@ document.addEventListener("mouseup", (event) => {
 
 document.addEventListener("mousemove", (event) => {
 	handleMouseMove(event.x, event.y);
+});
+
+document.addEventListener("keydown", (event) => {
+	if(isTyping) {
+		if(event.key === "Enter") {
+			drawText();
+			isTyping = false;
+			drawingStates.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+		}
+		else if(event.key.length === 1) {
+			textTyped += event.key;
+		}
+	}
 });
 
 function preventDefault(e) {
@@ -124,8 +150,6 @@ function handleMouseMove(x, y) {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			ctx.putImageData(drawing, 0, 0);
 
-			let fillShape = document.getElementById("fill-input").checked;
-
 			let run = Math.abs(mouseX - prevMouseX);
 			let rise = Math.abs(mouseY - prevMouseY); 
 			let radius = Math.sqrt(Math.pow(run, 2) + Math.pow(rise, 2));
@@ -180,6 +204,16 @@ function drawArrow(fromX, fromY, toX, toY) {
 	ctx.translate(-toX, -toY);
 
 	ctx.setTransform(1,0,0,1,0,0);
+}
+
+function drawText() {
+	ctx.beginPath();
+	ctx.font = "18px Arial";
+	ctx.fillStyle = document.getElementById("pencolor-input").value;
+	ctx.fillText(textTyped, textX, textY);
+
+	// reset text after displaying
+	textTyped = "";
 }
 
 // either ctx.stroke() or ctx.fill() based on what is selected

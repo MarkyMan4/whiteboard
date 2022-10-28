@@ -21,6 +21,8 @@
 		<div id="normal-controls">
 			<label>canvas color</label>
 			<input id="canvascolor-input" value="#212121" type="color" onchange="updateCanvasColor()"></input> | 
+			<label>pen color</label>
+			<input id="pencolor-input" value="#ffffff" type="color"></input> | 
 			<label>tool</label>
 			<select name="tools" id="tool-select" onchange="updateSelectedTool()">
 				<option value="pen">pen</option>
@@ -29,11 +31,10 @@
 				<option value="rect">rectangle</option>
 				<option value="circle">circle</option>
 				<option value="arrow">arrow</option>
+				<option value="text">text</option>
 			</select> | 
 			<label>fill shapes</label>
 			<input id="fill-input" type="checkbox"> | 
-			<label>pen color</label>
-			<input id="pencolor-input" value="#ffffff" type="color"></input> | 
 			<label>pen width</label>
 			<input id="pen-width" type="text" pattern="\d*" value="5" maxlength="4" size="4"></input> | 
 			<button onclick="undo()">undo</button> | 
