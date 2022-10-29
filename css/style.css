@@ -41,3 +41,7 @@
 	color: rgb(4, 245, 56);
 	font-family: 'Courier New', Courier, monospace;
 }
+
+#font-input {
+	display: none;
+}

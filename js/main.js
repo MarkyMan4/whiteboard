@@ -207,8 +207,9 @@ function drawArrow(fromX, fromY, toX, toY) {
 }
 
 function drawText() {
+	let fontSize = document.getElementById("font-size").value;
 	ctx.beginPath();
-	ctx.font = "18px Arial";
+	ctx.font = `${fontSize}px Arial`;
 	ctx.fillStyle = document.getElementById("pencolor-input").value;
 	ctx.fillText(textTyped, textX, textY);
 
@@ -278,6 +279,14 @@ function updateCanvasColor() {
 
 function updateSelectedTool() {
 	tool = document.getElementById("tool-select").value;
+
+	// show font input if text tool selected
+	if(tool === "text") {
+		document.getElementById("font-input").style.display = "inline-block";
+	}
+	else {
+		document.getElementById("font-input").style.display = "none";
+	}
 }
 
 function updateMode() {
